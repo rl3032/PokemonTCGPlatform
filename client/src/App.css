@@ -1,0 +1,155 @@
+body,
+html {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  background-color: #f8f8f8;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+  flex-grow: 1;
+}
+
+.navigation-menu ul {
+  list-style: none;
+  display: flex;
+  padding: 0;
+  margin: 0;
+}
+
+.navigation-menu li {
+  padding: 0 1rem;
+}
+
+.navigation-menu a,
+.login a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+
+.login {
+  flex-grow: 0;
+}
+
+.featured-cards {
+  margin: 20px 0;
+  padding: 1rem 0;
+  text-align: center;
+  overflow-x: auto;
+}
+
+.cards-container {
+  display: flex;
+  justify-content: space-around;
+}
+
+.card {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin: 10px;
+  width: 150px;
+  text-align: center;
+}
+
+.card img {
+  width: 100%;
+  height: auto;
+  margin-bottom: 8px;
+}
+
+.flash-sale-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  margin: 20px 0;
+  border: 2px solid #ff4500; /* Flash sale indication */
+  border-radius: 8px;
+  background-color: #fffbea; /* Light background for emphasis */
+}
+
+.flash-sale-container .card {
+  margin: 0; /* Resets any margin if set in .card */
+  flex-grow: 1;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.flash-sale-container .card img {
+  width: 100%; /* Make the image responsive within the card */
+  max-width: 180px; /* Adjust maximum width as needed */
+  height: auto;
+}
+
+.flash-sale-container .countdown {
+  flex-shrink: 0;
+  padding: 10px 20px;
+  background-color: #ff4500; /* Color to highlight the countdown */
+  color: #fff;
+  border-radius: 8px;
+  margin-left: 20px;
+  font-weight: bold;
+}
+
+.see-more-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.see-more-btn:hover {
+  background-color: #0056b3;
+}
+
+footer {
+  background-color: #f8f8f8;
+  text-align: center;
+  padding: 1rem;
+  width: 100%;
+}
+
+/* Responsive design adjustments */
+@media (max-width: 768px) {
+  .navigation-menu ul {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .navigation-menu li {
+    padding: 0.5rem 0;
+  }
+
+  .cards-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .card {
+    width: auto;
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  header {
+    flex-direction: column;
+  }
+
+  .logo,
+  .login {
+    margin-bottom: 1rem;
+  }
+}
