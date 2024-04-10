@@ -1,0 +1,21 @@
+.card-detail-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  gap: 20px;
+}
+
+.card-image-container {
+  flex-basis: 50%;
+}
+
+.card-image {
+  width: 100%; /* Adjust as needed */
+}
+
+.card-info-container {
+  flex-basis: 50%;
+}
+
+/* Add additional styles for price-info, abilities, attacks as needed */

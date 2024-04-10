@@ -1,6 +1,11 @@
 import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Card from "./components/Card/Card";
+import Pokedex from "./components/Pokedex/Pokedex";
+import CardDetail from "./components/CardDetail/CardDetail";
+import Header from "./components/Header/Header";
+import Footer from "./components/Footer/Footer";
 import "./App.css";
-import Card from "./Card";
 
 const cards = [
   {
@@ -119,46 +124,77 @@ const cards = [
       market: 89.0,
     },
   },
+  {
+    id: "base1-1",
+    name: "Alakazam",
+    hp: "80",
+    types: ["Psychic"],
+    abilities: [
+      {
+        name: "Damage Swap",
+        text: "As often as you like during your turn (before your attack), you may move 1 damage counter from 1 of your Pokémon to another as long as you don't Knock Out that Pokémon. This power can't be used if Alakazam is Asleep, Confused, or Paralyzed.",
+        type: "Pokémon Power",
+      },
+    ],
+    attacks: [
+      {
+        name: "Confuse Ray",
+        cost: ["Psychic", "Psychic", "Colorless"],
+        convertedEnergyCost: 3,
+        damage: "30",
+        text: "Flip a coin. If heads, the Defending Pokémon is now Confused.",
+      },
+    ],
+    imageUrl: "https://images.pokemontcg.io/base1/1.png",
+    price: {
+      low: 33.0,
+      mid: 55.0,
+      high: 99.99,
+      market: 52.0,
+    },
+  },
+  {
+    id: "base1-6",
+    name: "Gyarados",
+    hp: "100",
+    types: ["Water"],
+    attacks: [
+      {
+        name: "Dragon Rage",
+        cost: ["Water", "Water", "Water"],
+        convertedEnergyCost: 3,
+        damage: "50",
+        text: "",
+      },
+      {
+        name: "Bubblebeam",
+        cost: ["Water", "Water", "Water", "Water"],
+        convertedEnergyCost: 4,
+        damage: "40",
+        text: "Flip a coin. If heads, the Defending Pokémon is now Paralyzed.",
+      },
+    ],
+    imageUrl: "https://images.pokemontcg.io/base1/6.png",
+    price: {
+      low: 39.99,
+      mid: 59.99,
+      high: 99.99,
+      market: 59.99,
+    },
+  },
 ];
 
-export function Header() {
-  return (
-    <header className="header">
-      <div className="logo">LOGO</div>
-      <nav className="navigation-menu">
-        <ul>
-          <li>
-            <a href="/">Home</a>
-          </li>
-          <li>
-            <a href="/pokedex">Pokédex</a>
-          </li>
-          <li>
-            <a href="/deck-builder">Deck Builder</a>
-          </li>
-          <li>
-            <a href="/market">Market</a>
-          </li>
-        </ul>
-      </nav>
-      <div className="login">
-        <a href="/login">Log in</a>
-      </div>
-    </header>
-  );
-}
-
 export function FeatureCards() {
+  const randomCards = cards.sort(() => 0.5 - Math.random()).slice(0, 4);
+
   const handleCardClick = (card) => {
-    // Define what happens when a card is clicked
-    // For instance, navigate to the card's detail page or show a modal
     console.log(card.name);
   };
 
   return (
     <section className="featured-cards">
       <div className="cards-container">
-        {cards.map((card) => (
+        {randomCards.map((card) => (
           <Card key={card.id} card={card} onClick={handleCardClick} />
         ))}
       </div>
@@ -176,8 +212,6 @@ export function FlashSale() {
   };
 
   const handleCardClick = (card) => {
-    // Define what happens when a card is clicked
-    // For instance, navigate to the card's detail page or show a modal
     console.log(card.name);
   };
 
@@ -193,23 +227,18 @@ export function FlashSale() {
   );
 }
 
-export function Footer() {
-  return (
-    <footer className="footer">
-      <div className="footer-content">
-        <p>Terms and Conditions</p>
-      </div>
-    </footer>
-  );
-}
-
 export default function App() {
   return (
-    <div className="App">
-      <Header />
-      <FeatureCards />
-      <FlashSale />
-      <Footer />
-    </div>
+    <Router>
+      <div className="App">
+        <Header />
+        <Routes>
+          <Route path="/" element={<FeatureCards cards={cards} />} />
+          <Route path="/pokedex" element={<Pokedex cards={cards} />} />
+          <Route path="/details/:id" element={<CardDetail cards={cards} />} />
+        </Routes>
+        <Footer />
+      </div>
+    </Router>
   );
 }
