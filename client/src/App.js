@@ -159,6 +159,7 @@ const cards = [
     name: "Gyarados",
     hp: "100",
     types: ["Water"],
+    abilities: [],
     attacks: [
       {
         name: "Dragon Rage",
