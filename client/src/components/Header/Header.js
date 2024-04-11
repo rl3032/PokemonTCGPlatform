@@ -1,7 +1,17 @@
+import React from "react";
+import { Link } from "react-router-dom";
+import "./Header.css";
+
 function Header() {
   return (
     <header className="header">
-      <div className="logo">LOGO</div>
+      <Link to="/">
+        <img
+          src="/logo.png"
+          alt="Pokémon Trading Card Game Logo"
+          className="logo"
+        />
+      </Link>
       <nav className="navigation-menu">
         <ul>
           <li>

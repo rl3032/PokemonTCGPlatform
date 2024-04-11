@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Card from "./components/Card/Card";
 import Pokedex from "./components/Pokedex/Pokedex";
 import CardDetail from "./components/CardDetail/CardDetail";
@@ -184,11 +185,13 @@ const cards = [
   },
 ];
 
-export function FeatureCards() {
+export function FeatureCards(onClick) {
   const randomCards = cards.sort(() => 0.5 - Math.random()).slice(0, 4);
 
+  const navigate = useNavigate();
+
   const handleCardClick = (card) => {
-    console.log(card.name);
+    navigate(`/details/${card.id}`);
   };
 
   return (

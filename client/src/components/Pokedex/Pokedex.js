@@ -45,7 +45,7 @@ const Pokedex = ({ cards }) => {
             key={card.id}
             onClick={() => handleCardClick(card)}
           >
-            <Card card={card} />
+            <Card card={card} onClick={handleCardClick} />
           </div>
         ))}
       </div>
