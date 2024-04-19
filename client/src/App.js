@@ -195,6 +195,10 @@ export function FeatureCards(onClick) {
     navigate(`/details/${card.id}`);
   };
 
+  const handleSeeMoreClick = () => {
+    navigate("/pokedex");
+  };
+
   return (
     <section className="featured-cards">
       <div className="cards-container">
@@ -202,7 +206,9 @@ export function FeatureCards(onClick) {
           <Card key={card.id} card={card} onClick={handleCardClick} />
         ))}
       </div>
-      <button className="see-more-btn">See More in Pokédex</button>
+      <button className="see-more-btn" onClick={handleSeeMoreClick}>
+        See More in Pokédex
+      </button>
     </section>
   );
 }
@@ -211,12 +217,29 @@ export function FlashSale() {
   const flashSaleCard = {
     id: "base1-44",
     name: "Bulbasaur",
+    hp: "40",
+    types: ["Grass"],
+    abilities: [],
+    attacks: [
+      {
+        name: "Leech Seed",
+        cost: ["Grass", "Colorless"],
+        convertedEnergyCost: 2,
+        damage: "30",
+        text: "Unless all damage from this attack is prevented, you may remove 1 damage counter from Bulbasaur.",
+      },
+    ],
     imageUrl: "https://images.pokemontcg.io/base1/44.png",
-    endDateTime: "2024-03-21T23:59:59",
   };
 
+  const navigate = useNavigate();
+
   const handleCardClick = (card) => {
-    console.log(card.name);
+    navigate(`/details/${card.id}`);
+  };
+
+  const handleGoToMarketClick = () => {
+    navigate("/market");
   };
 
   return (
@@ -225,8 +248,10 @@ export function FlashSale() {
         key={flashSaleCard.id}
         card={flashSaleCard}
         onClick={handleCardClick}
-        saleEndTime={flashSaleCard.endDateTime}
       />
+      <button onClick={handleGoToMarketClick} className="go-to-market-btn">
+        Go to Market
+      </button>
     </div>
   );
 }
@@ -237,9 +262,18 @@ export default function App() {
       <div className="App">
         <Header />
         <Routes>
-          <Route path="/" element={<FeatureCards cards={cards} />} />
+          <Route
+            path="/"
+            element={
+              <>
+                <FeatureCards cards={cards} />
+                <FlashSale />
+              </>
+            }
+          />
           <Route path="/pokedex" element={<Pokedex cards={cards} />} />
           <Route path="/details/:id" element={<CardDetail cards={cards} />} />
+          <Route path="/market" element={<div>Market</div>} />
         </Routes>
         <Footer />
       </div>
