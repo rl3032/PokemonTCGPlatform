@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Card from "./Card";
 import { useNavigate } from "react-router-dom";
-import "../style/Pokedex.css";
+import "../styles/Pokedex.css";
 
 const Pokedex = ({ cards }) => {
   const [searchTerm, setSearchTerm] = useState("");

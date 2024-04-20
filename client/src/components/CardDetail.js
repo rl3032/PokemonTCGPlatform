@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import "../style/CardDetail.css";
+import "../styles/CardDetail.css";
 
 const CardDetail = ({ cards }) => {
   const { id } = useParams();

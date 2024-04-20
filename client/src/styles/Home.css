@@ -1,0 +1,33 @@
+/* Home.css */
+.home-container {
+  padding: 20px;
+  text-align: center;
+}
+
+.featured-cards,
+.flash-sale-container {
+  margin: 20px auto;
+  padding: 20px;
+  text-align: center;
+  width: 80%; /* Adjust width as necessary for your design */
+}
+
+.cards-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.card {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin: 10px;
+  width: 150px;
+  text-align: center;
+}
+
+.card img {
+  width: 100%;
+  height: auto;
+  margin-bottom: 8px;
+}

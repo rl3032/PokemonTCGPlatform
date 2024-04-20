@@ -1,0 +1,26 @@
+.card-detail-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.card-image-container {
+  flex-basis: 50%;
+  max-width: 300px;
+  margin: auto;
+}
+
+.card-image {
+  width: 100%;
+  height: auto;
+  max-height: 400px;
+}
+
+.card-info-container {
+  flex-basis: 50%;
+  max-width: 500px;
+  margin: auto;
+}

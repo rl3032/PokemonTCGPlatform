@@ -1,0 +1,43 @@
+/* FeatureCards.css */
+.featured-cards {
+  margin: 20px 0;
+  padding: 20px;
+  text-align: center;
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.cards-container {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.card {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin: 10px;
+  width: 150px;
+  text-align: center;
+}
+
+.card img {
+  width: 100%;
+  height: auto;
+  margin-bottom: 8px;
+}
+
+.see-more-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.see-more-btn:hover {
+  background-color: #0056b3;
+}

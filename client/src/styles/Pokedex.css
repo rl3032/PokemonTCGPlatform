@@ -1,0 +1,15 @@
+.pokedex-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Creates a 4-column layout */
+  gap: 20px; /* Space between cards */
+  margin: 20px; /* Space around the grid */
+}
+
+.card-container {
+  cursor: pointer; /* Indicates the card is clickable */
+}
+
+.card-container img {
+  width: 100%; /* Make images fill the container */
+  height: auto; /* Keep the aspect ratio of the images */
+}

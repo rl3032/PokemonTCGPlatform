@@ -3,8 +3,11 @@ import * as ReactDOMClient from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
 import { AuthTokenProvider } from "./AuthTokenContext";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 import Home from "./components/Home";
-import CardDetail from "./components/CardDetail";
+import DeckBuilder from "./components/DeckBuilder";
+import Market from "./components/Market";
 import Pokedex from "./components/Pokedex";
 import VerifyUser from "./components/VerifyUser";
 import AuthDebugger from "./components/AuthDebugger";
@@ -46,23 +49,16 @@ root.render(
     >
       <AuthTokenProvider>
         <BrowserRouter>
+          <Header />
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/pokedex" element={<Pokedex />} />
+            <Route path="/deck-builder" element={<DeckBuilder />} />
+            <Route path="/market" element={<Market />} />
             <Route path="/verify-user" element={<VerifyUser />} />
-            <Route
-              path="app"
-              element={
-                <RequireAuth>
-                  <Navigate to="/app/pokedex" replace />
-                </RequireAuth>
-              }
-            >
-              <Route path="pokedex" element={<Pokedex />} />
-              <Route path="details/:id" element={<CardDetail />} />
-              <Route path="debugger" element={<AuthDebugger />} />
-            </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <Footer />
         </BrowserRouter>
       </AuthTokenProvider>
     </Auth0Provider>
