@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import Card from "./Card";
 import { useNavigate } from "react-router-dom";
+import { cards } from "../data/CardsData";
 import "../styles/Pokedex.css";
 
-const Pokedex = ({ cards }) => {
+const Pokedex = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
   const [sortCriteria, setSortCriteria] = useState("name");

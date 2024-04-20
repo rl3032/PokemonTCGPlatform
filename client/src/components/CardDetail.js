@@ -1,8 +1,9 @@
 import React from "react";
 import { useParams } from "react-router-dom";
+import { cards } from "../data/CardsData";
 import "../styles/CardDetail.css";
 
-const CardDetail = ({ cards }) => {
+const CardDetail = () => {
   const { id } = useParams();
   const card = cards.find((card) => card.id === id);
 
