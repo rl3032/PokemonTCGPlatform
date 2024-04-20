@@ -3,13 +3,12 @@ import * as ReactDOMClient from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
 import { AuthTokenProvider } from "./AuthTokenContext";
-import AppLayout from "./components/AppLayout";
+import Home from "./components/Home";
 import CardDetail from "./components/CardDetail";
 import Pokedex from "./components/Pokedex";
 import VerifyUser from "./components/VerifyUser";
 import AuthDebugger from "./components/AuthDebugger";
 import NotFound from "./components/NotFound";
-import App from "./App";
 
 const container = document.getElementById("root");
 
@@ -48,13 +47,13 @@ root.render(
       <AuthTokenProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<App />} />
+            <Route path="/" element={<Home />} />
             <Route path="/verify-user" element={<VerifyUser />} />
             <Route
               path="app"
               element={
                 <RequireAuth>
-                  <AppLayout />
+                  <Navigate to="/app/pokedex" replace />
                 </RequireAuth>
               }
             >
