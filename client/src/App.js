@@ -1,11 +1,11 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import Card from "./components/Card/Card";
-import Pokedex from "./components/Pokedex/Pokedex";
-import CardDetail from "./components/CardDetail/CardDetail";
-import Header from "./components/Header/Header";
-import Footer from "./components/Footer/Footer";
+import Card from "./components/Card";
+import Pokedex from "./components/Pokedex";
+import CardDetail from "./components/CardDetail";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 import "./App.css";
 
 const cards = [
