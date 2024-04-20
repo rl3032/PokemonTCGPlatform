@@ -9,7 +9,9 @@ import Home from "./components/Home";
 import DeckBuilder from "./components/DeckBuilder";
 import Market from "./components/Market";
 import Pokedex from "./components/Pokedex";
+import CardDetail from "./components/CardDetail";
 import VerifyUser from "./components/VerifyUser";
+import Login from "./components/Login";
 import AuthDebugger from "./components/AuthDebugger";
 import NotFound from "./components/NotFound";
 
@@ -53,9 +55,19 @@ root.render(
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/pokedex" element={<Pokedex />} />
-            <Route path="/deck-builder" element={<DeckBuilder />} />
+            <Route
+              path="/deck-builder"
+              element={
+                <RequireAuth>
+                  <DeckBuilder />
+                </RequireAuth>
+              }
+            />
             <Route path="/market" element={<Market />} />
             <Route path="/verify-user" element={<VerifyUser />} />
+            <Route path="/auth-debugger" element={<AuthDebugger />} />
+            <Route path="/details/:id" element={<CardDetail />} />
+            <Route path="/login" element={<Login />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           <Footer />
