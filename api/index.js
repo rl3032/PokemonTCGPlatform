@@ -30,42 +30,58 @@ app.get("/ping", (req, res) => {
 });
 
 // add your endpoints below this line
-app.get("/cards/:id", requireAuth, async (req, res) => {
-  const cardId = req.params.id;
-
+// Fetch multiple cards by a range of IDs
+// Fetch multiple cards by a range of IDs and store them in the database
+app.get("/cards-range", async (req, res) => {
+  const ids = Array.from({ length: 50 }, (_, i) => `base1-${i + 1}`);
   try {
-    const { data } = await axios.get(
-      `https://api.pokemontcg.io/v2/cards/${cardId}`,
-      {
-        headers: {
-          "X-Api-Key": process.env.POKEMON_TCG_API_KEY,
-        },
-      }
-    );
-    res.json(data);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Error fetching data from Pokémon TCG API");
-  }
-});
+    // First, try to fetch all the requested cards from the database
+    let cards = await prisma.card.findMany({
+      where: { id: { in: ids } },
+    });
 
-app.get("/original-pokemon", async (req, res) => {
-  const query = encodeURIComponent("nationalPokedexNumbers:[1 TO 151]");
-  const orderBy = "nationalPokedexNumbers";
+    // Determine which card IDs are missing in the database
+    const fetchedIds = cards.map((card) => card.id);
+    const missingIds = ids.filter((id) => !fetchedIds.includes(id));
 
-  try {
-    const { data } = await axios.get(
-      `https://api.pokemontcg.io/v2/cards?q=${query}&orderBy=${orderBy}`,
-      {
-        headers: {
-          "X-Api-Key": process.env.POKEMON_TCG_API_KEY,
-        },
+    // Only fetch missing cards from the external API
+    for (let id of missingIds) {
+      const url = `https://api.pokemontcg.io/v2/cards/${id}`;
+      const response = await axios.get(url, {
+        headers: { "X-Api-Key": process.env.POKEMON_TCG_API_KEY },
+      });
+      const cardData = response.data.data;
+
+      if (cardData) {
+        const priceDefaults = {
+          low: 0,
+          mid: 0,
+          high: 0,
+          market: 0,
+        };
+        const prices = cardData.tcgplayer?.prices?.holofoil || priceDefaults;
+
+        const newCard = await prisma.card.create({
+          data: {
+            id: cardData.id,
+            name: cardData.name,
+            hp: cardData.hp || "N/A",
+            types: cardData.types.join(", "),
+            imageUrl: cardData.images.small,
+            lowPrice: prices.low,
+            midPrice: prices.mid,
+            highPrice: prices.high,
+            marketPrice: prices.market,
+          },
+        });
+        cards.push(newCard); // Add the newly fetched card to the list of cards
       }
-    );
-    res.json(data);
+    }
+
+    res.json(cards); // Return all cards, both cached and newly fetched
   } catch (error) {
-    console.error(error);
-    res.status(500).send("Error fetching data from Pokémon TCG API");
+    console.error("Error fetching cards:", error);
+    res.status(500).send("Error fetching cards");
   }
 });
 

@@ -23,45 +23,15 @@ model User {
 }
 
 model Card {
-  id              String   @id
-  name            String
-  hp              String?
-  types           String
-  abilities       Ability[]
-  attacks         Attack[]
-  imageUrl        String?
-  price           Price?   @relation
-  priceId         String?  @unique
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-}
-
-model Ability {
-  id        String   @id @default(uuid())
+  id        String   @id
   name      String
-  text      String?
-  type      String?
-  card      Card     @relation(fields: [cardId], references: [id])
-  cardId    String
-}
-
-model Attack {
-  id                  String   @id @default(uuid())
-  name                String
-  cost                String
-  convertedEnergyCost Int
-  damage              String?
-  text                String?
-  card                Card     @relation(fields: [cardId], references: [id])
-  cardId              String
-}
-
-model Price {
-  id     String   @id @default(uuid())
-  low    Float
-  mid    Float
-  high   Float
-  market Float
-  card   Card     @relation(fields: [cardId], references: [id])
-  cardId String   @unique
+  hp        String?
+  types     String
+  imageUrl  String?
+  lowPrice  Float?   // Corresponds to Price.low
+  midPrice  Float?   // Corresponds to Price.mid
+  highPrice Float?   // Corresponds to Price.high
+  marketPrice Float? // Corresponds to Price.market
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
