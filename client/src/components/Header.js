@@ -21,9 +21,6 @@ function Header() {
             <a href="/pokedex">Pokédex</a>
           </li>
           <li>
-            <a href="/deck-builder">Deck Builder</a>
-          </li>
-          <li>
             <a href="/market">Market</a>
           </li>
         </ul>
