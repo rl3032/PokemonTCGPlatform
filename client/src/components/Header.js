@@ -20,9 +20,6 @@ function Header() {
           <li>
             <a href="/pokedex">Pokédex</a>
           </li>
-          <li>
-            <a href="/market">Market</a>
-          </li>
         </ul>
       </nav>
       <div className="login">
