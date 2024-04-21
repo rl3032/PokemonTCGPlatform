@@ -6,14 +6,14 @@ import { AuthTokenProvider } from "./AuthTokenContext";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./components/Home";
-import DeckBuilder from "./components/DeckBuilder";
 import Market from "./components/Market";
 import Pokedex from "./components/Pokedex";
 import CardDetail from "./components/CardDetail";
 import VerifyUser from "./components/VerifyUser";
 import Login from "./components/Login";
+import Profile from "./components/Profile";
+import AppLayout from "./components/AppLayout";
 import AuthDebugger from "./components/AuthDebugger";
-import NotFound from "./components/NotFound";
 
 const container = document.getElementById("root");
 
@@ -55,20 +55,22 @@ root.render(
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/pokedex" element={<Pokedex />} />
+
             <Route
-              path="/deck-builder"
+              path="/app"
               element={
                 <RequireAuth>
-                  <DeckBuilder />
+                  <AppLayout />
                 </RequireAuth>
               }
             />
+
             <Route path="/market" element={<Market />} />
             <Route path="/verify-user" element={<VerifyUser />} />
             <Route path="/auth-debugger" element={<AuthDebugger />} />
             <Route path="/details/:id" element={<CardDetail />} />
             <Route path="/login" element={<Login />} />
-            <Route path="*" element={<NotFound />} />
+            <Route path="/profile" element={<Profile />} />
           </Routes>
           <Footer />
         </BrowserRouter>

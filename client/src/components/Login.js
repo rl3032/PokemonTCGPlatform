@@ -1,13 +1,36 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
+import "../styles/Login.css";
 
 const Login = () => {
-  const { loginWithRedirect } = useAuth0();
+  const { isAuthenticated, loginWithRedirect } = useAuth0();
+  const navigate = useNavigate();
+  const signUp = () => loginWithRedirect({ screen_hint: "signup" });
+
+  if (isAuthenticated) {
+    navigate("/app");
+  }
 
   return (
-    <div>
+    <div className="login">
       <h1>Welcome to the Pokémon TCG Platform</h1>
-      <button onClick={() => loginWithRedirect()}>Log In</button>
+      <div>
+        {!isAuthenticated ? (
+          <button className="button" onClick={loginWithRedirect}>
+            Log In
+          </button>
+        ) : (
+          <button className="button" onClick={() => navigate("/app")}>
+            Enter App
+          </button>
+        )}
+      </div>
+      <div>
+        <button className="button-signup" onClick={signUp}>
+          Create Account
+        </button>
+      </div>
     </div>
   );
 };

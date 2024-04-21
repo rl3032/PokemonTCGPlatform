@@ -1,0 +1,33 @@
+/* Login.css */
+.login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: "Arial", sans-serif; /* Font style for the page */
+}
+
+.login h1 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.button,
+.button-signup {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+  margin: 10px;
+  text-align: center;
+  width: 150px;
+  display: inline-block;
+}
+
+.button:hover {
+  background-color: #5a6268;
+}
