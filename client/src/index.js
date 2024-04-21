@@ -7,13 +7,13 @@ import { CardsProvider } from "./contexts/CardContext";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./components/Home";
-import Market from "./components/Market";
 import Pokedex from "./components/Pokedex";
 import CardDetail from "./components/CardDetail";
 import VerifyUser from "./components/VerifyUser";
 import Login from "./components/Login";
-import Profile from "./components/Profile";
 import AppLayout from "./components/AppLayout";
+import Profile from "./components/Profile";
+import Collection from "./components/Collection";
 import AuthDebugger from "./components/AuthDebugger";
 
 const container = document.getElementById("root");
@@ -57,7 +57,7 @@ root.render(
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/pokedex" element={<Pokedex />} />
-
+              <Route path="/details/:id" element={<CardDetail />} />
               <Route
                 path="/app"
                 element={
@@ -67,12 +67,11 @@ root.render(
                 }
               />
 
-              <Route path="/market" element={<Market />} />
               <Route path="/verify-user" element={<VerifyUser />} />
-              <Route path="/auth-debugger" element={<AuthDebugger />} />
-              <Route path="/details/:id" element={<CardDetail />} />
               <Route path="/login" element={<Login />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/collection" element={<Collection />} />
+              <Route path="/auth-debugger" element={<AuthDebugger />} />
             </Routes>
             <Footer />
           </BrowserRouter>

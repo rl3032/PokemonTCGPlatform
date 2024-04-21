@@ -19,7 +19,7 @@ export default function AppLayout() {
               <Link to="/profile">Profile</Link>
             </li>
             <li>
-              <Link to="/app/todos">TODOs</Link>
+              <Link to="/collection">My Collection</Link>
             </li>
             <li>
               <Link to="/auth-debugger">Auth Debugger</Link>
