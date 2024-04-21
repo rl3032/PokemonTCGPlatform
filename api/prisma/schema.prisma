@@ -16,89 +16,52 @@ datasource db {
 model User {
   id           Int      @id @default(autoincrement())
   email        String   @unique
-  auth0Id      String   @unique @default("")
+  auth0Id      String   @unique
   name         String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
 
-
 model Card {
-  id              String    @id
+  id              String   @id
   name            String
-  stage           String?
-  hp              Int?
-  types           String[]
+  hp              String?
+  types           String
   abilities       Ability[]
   attacks         Attack[]
-  weakness        String?
-  resistance      String?
-  retreatCost     Int
-  artist          String?
-  rarity          String
-  set             Set      @relation(fields: [setId], references: [id])
-  setId           String
-  number          String
-  regulationMark  String?
-  legalities      Legalities
-  prices          Price
+  imageUrl        String?
+  price           Price?   @relation
+  priceId         String?  @unique
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 }
 
-
-model UserCard {
-  userId    Int
-  user      User    @relation(fields: [userId], references: [id])
-  cardId    String
-  card      Card    @relation(fields: [cardId], references: [id])
-  
-  @@id([userId, cardId])
-}
-
-
 model Ability {
-  id        String  @id @default(uuid())
+  id        String   @id @default(uuid())
   name      String
-  effect    String
+  text      String?
+  type      String?
+  card      Card     @relation(fields: [cardId], references: [id])
   cardId    String
-  card      Card    @relation(fields: [cardId], references: [id])
 }
 
 model Attack {
-  id          String  @id @default(uuid())
-  name        String
-  cost        String[]
-  damage      String?
-  effect      String?
-  cardId      String
-  card        Card    @relation(fields: [cardId], references: [id])
-}
-
-model Set {
-  id        String  @id
-  name      String
-  series    String
-  total     Int
-  cards     Card[]
-}
-
-model Legalities {
-  id           String   @id @default(uuid())
-  cardId       String
-  card         Card     @relation(fields: [cardId], references: [id])
-  standard     Boolean
-  expanded     Boolean
-  unlimited    Boolean
+  id                  String   @id @default(uuid())
+  name                String
+  cost                String
+  convertedEnergyCost Int
+  damage              String?
+  text                String?
+  card                Card     @relation(fields: [cardId], references: [id])
+  cardId              String
 }
 
 model Price {
-  id          String  @id @default(uuid())
-  cardId      String
-  card        Card    @relation(fields: [cardId], references: [id])
-  market      Float?
-  low         Float?
-  mid         Float?
-  high        Float?
-  trend       Float?
+  id     String   @id @default(uuid())
+  low    Float
+  mid    Float
+  high   Float
+  market Float
+  card   Card     @relation(fields: [cardId], references: [id])
+  cardId String   @unique
 }
