@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useAuthToken } from "../AuthTokenContext";
+import { useAuthToken } from "../contexts/AuthTokenContext";
 import { useNavigate } from "react-router-dom";
 
 export default function VerifyUser() {

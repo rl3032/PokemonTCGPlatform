@@ -43,7 +43,7 @@ const Pokedex = () => {
 
       if (valueA && valueB) {
         // Check if values are not null
-        if (["hp", "price.market"].includes(sortCriteria)) {
+        if (["hp", "marketPrice"].includes(sortCriteria)) {
           valueA = parseInt(valueA, 10);
           valueB = parseInt(valueB, 10);
         } else if (sortCriteria === "id") {
@@ -98,7 +98,7 @@ const Pokedex = () => {
           <option value="name">Name</option>
           <option value="id">ID</option>
           <option value="hp">HP</option>
-          <option value="price.market">Price</option>
+          <option value="marketPrice">Price</option>
         </select>
       </div>
       <div className="pokedex-container">
