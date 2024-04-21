@@ -1,18 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Card from "./Card";
 import { useNavigate } from "react-router-dom";
-import { cards } from "../data/CardsData";
 import "../styles/Pokedex.css";
 
 const Pokedex = () => {
+  const [cards, setCards] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
   const [sortCriteria, setSortCriteria] = useState("name");
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  // Filter cards based on the search term
-  const filteredCards = cards.filter((card) =>
-    card.name.toLowerCase().includes(searchTerm.toLowerCase())
+  useEffect(() => {
+    setIsLoading(true);
+    axios
+      .get("http://localhost:8000/cards-range")
+      .then((response) => {
+        setCards(response.data.filter((card) => card !== null && card.name)); // Ensure that card is not null and has a name
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        setError(err.toString());
+        setIsLoading(false);
+      });
+  }, []);
+
+  // Filter cards based on the search term and ensure all cards are valid
+  const filteredCards = cards.filter(
+    (card) =>
+      card &&
+      card.name &&
+      card.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Sort the cards based on the sort criteria and order
@@ -21,27 +41,28 @@ const Pokedex = () => {
       let valueA = a[sortCriteria];
       let valueB = b[sortCriteria];
 
-      // Special handling for numerical values stored as strings
-      if (sortCriteria === "hp" || sortCriteria === "price.market") {
-        valueA = parseInt(valueA, 10);
-        valueB = parseInt(valueB, 10);
-      } else if (sortCriteria === "id") {
-        const matchA = valueA.match(/\d+/);
-        const matchB = valueB.match(/\d+/);
-        if (matchA && matchB) {
-          valueA = parseInt(matchA[0], 10);
-          valueB = parseInt(matchB[0], 10);
+      if (valueA && valueB) {
+        // Check if values are not null
+        if (["hp", "price.market"].includes(sortCriteria)) {
+          valueA = parseInt(valueA, 10);
+          valueB = parseInt(valueB, 10);
+        } else if (sortCriteria === "id") {
+          valueA = parseInt(valueA.match(/\d+/)[0], 10);
+          valueB = parseInt(valueB.match(/\d+/)[0], 10);
+        } else {
+          valueA = valueA.toLowerCase();
+          valueB = valueB.toLowerCase();
         }
-      } else if (typeof valueA === "string") {
-        valueA = valueA.toLowerCase();
-        valueB = valueB.toLowerCase();
-      }
 
-      if (sortOrder === "asc") {
-        return valueA > valueB ? 1 : -1;
-      } else {
-        return valueA < valueB ? 1 : -1;
+        return sortOrder === "asc"
+          ? valueA > valueB
+            ? 1
+            : -1
+          : valueA < valueB
+          ? 1
+          : -1;
       }
+      return 0;
     });
   };
 
@@ -50,6 +71,9 @@ const Pokedex = () => {
   const handleCardClick = (card) => {
     navigate(`/details/${card.id}`);
   };
+
+  if (isLoading) return <div>Loading cards...</div>;
+  if (error) return <div>An error occurred: {error}</div>;
 
   return (
     <div>

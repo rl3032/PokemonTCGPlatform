@@ -1,0 +1,26 @@
+/* Base styling for the profile container */
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px;
+  background-color: #f8f9fa; /* Light background color for the profile area */
+  border-radius: 8px; /* Slightly rounded corners for a soft look */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  width: 80%;
+  max-width: 400px; /* Maximum width of the profile area */
+  margin: 20px auto; /* Centering the profile container */
+}
+
+/* Styling for paragraphs within the profile, which include email, Auth0 ID, etc. */
+.profile-container p {
+  font-size: 16px; /* Readable text size */
+  color: #343a40; /* Dark gray text for better readability */
+  margin: 10px 0; /* Spacing between paragraph items */
+  padding: 5px 10px; /* Padding for touch friendliness */
+  border-radius: 4px; /* Rounded corners within the context */
+  background-color: #ffffff; /* White background for the text area */
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.06); /* Slight shadow for text entries */
+  width: 100%; /* Full width within the container */
+  box-sizing: border-box; /* Ensures padding does not affect width */
+}

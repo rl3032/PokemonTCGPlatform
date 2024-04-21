@@ -26,7 +26,7 @@ function Header() {
         </ul>
       </nav>
       <div className="login">
-        <a href="/login">Log in</a>
+        <a href="/login">Account</a>
       </div>
     </header>
   );
