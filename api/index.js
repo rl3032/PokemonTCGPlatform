@@ -85,6 +85,105 @@ app.get("/cards-range", async (req, res) => {
   }
 });
 
+// Fetch all cards (potentially with filters later on)
+app.get("/cards", async (req, res) => {
+  try {
+    const cards = await prisma.card.findMany();
+    res.json(cards);
+  } catch (error) {
+    res.status(500).send("Failed to fetch cards");
+  }
+});
+
+// Fetch cards for a specific user
+app.get("/user-cards/:userId", async (req, res) => {
+  try {
+    const cards = await prisma.card.findMany({
+      where: { userId: parseInt(req.params.userId) },
+    });
+    res.json(cards);
+  } catch (error) {
+    res.status(500).send("Failed to fetch user cards");
+  }
+});
+
+// Create a new card
+app.post("/cards", async (req, res) => {
+  const {
+    name,
+    hp,
+    types,
+    imageUrl,
+    lowPrice,
+    midPrice,
+    highPrice,
+    marketPrice,
+    userId,
+  } = req.body;
+  try {
+    const newCard = await prisma.card.create({
+      data: {
+        name,
+        hp,
+        types,
+        imageUrl,
+        lowPrice,
+        midPrice,
+        highPrice,
+        marketPrice,
+        userId,
+      },
+    });
+    res.json(newCard);
+  } catch (error) {
+    res.status(500).send("Failed to create card");
+  }
+});
+
+// Update an existing card
+app.put("/cards/:id", async (req, res) => {
+  const {
+    name,
+    hp,
+    types,
+    imageUrl,
+    lowPrice,
+    midPrice,
+    highPrice,
+    marketPrice,
+  } = req.body;
+  try {
+    const card = await prisma.card.update({
+      where: { id: req.params.id },
+      data: {
+        name,
+        hp,
+        types,
+        imageUrl,
+        lowPrice,
+        midPrice,
+        highPrice,
+        marketPrice,
+      },
+    });
+    res.json(card);
+  } catch (error) {
+    res.status(500).send("Failed to update card");
+  }
+});
+
+// Delete a card
+app.delete("/cards/:id", async (req, res) => {
+  try {
+    await prisma.card.delete({
+      where: { id: req.params.id },
+    });
+    res.send("Card deleted");
+  } catch (error) {
+    res.status(500).send("Failed to delete card");
+  }
+});
+
 // this endpoint is used by the client to verify the user status and to make sure the user is registered in our database once they signup with Auth0
 // if not registered in our database we will create it.
 // if the user is already registered we will return the user information
