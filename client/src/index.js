@@ -3,6 +3,7 @@ import * as ReactDOMClient from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
 import { AuthTokenProvider } from "./AuthTokenContext";
+import { CardsProvider } from "./CardContext";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./components/Home";
@@ -50,30 +51,32 @@ root.render(
       }}
     >
       <AuthTokenProvider>
-        <BrowserRouter>
-          <Header />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/pokedex" element={<Pokedex />} />
+        <CardsProvider>
+          <BrowserRouter>
+            <Header />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/pokedex" element={<Pokedex />} />
 
-            <Route
-              path="/app"
-              element={
-                <RequireAuth>
-                  <AppLayout />
-                </RequireAuth>
-              }
-            />
+              <Route
+                path="/app"
+                element={
+                  <RequireAuth>
+                    <AppLayout />
+                  </RequireAuth>
+                }
+              />
 
-            <Route path="/market" element={<Market />} />
-            <Route path="/verify-user" element={<VerifyUser />} />
-            <Route path="/auth-debugger" element={<AuthDebugger />} />
-            <Route path="/details/:id" element={<CardDetail />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/profile" element={<Profile />} />
-          </Routes>
-          <Footer />
-        </BrowserRouter>
+              <Route path="/market" element={<Market />} />
+              <Route path="/verify-user" element={<VerifyUser />} />
+              <Route path="/auth-debugger" element={<AuthDebugger />} />
+              <Route path="/details/:id" element={<CardDetail />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/profile" element={<Profile />} />
+            </Routes>
+            <Footer />
+          </BrowserRouter>
+        </CardsProvider>
       </AuthTokenProvider>
     </Auth0Provider>
   </React.StrictMode>
