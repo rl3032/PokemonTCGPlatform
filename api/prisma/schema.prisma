@@ -14,24 +14,36 @@ datasource db {
 }
 
 model User {
-  id           Int      @id @default(autoincrement())
-  email        String   @unique
-  auth0Id      String   @unique
+  id           Int        @id @default(autoincrement())
+  email        String     @unique
+  auth0Id      String     @unique
   name         String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  collections  Collection[]
 }
 
 model Card {
-  id        String   @id
-  name      String
-  hp        String?
-  types     String
-  imageUrl  String?
-  lowPrice  Float?   // Corresponds to Price.low
-  midPrice  Float?   // Corresponds to Price.mid
-  highPrice Float?   // Corresponds to Price.high
-  marketPrice Float? // Corresponds to Price.market
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String       @id
+  name         String
+  hp           String?
+  types        String
+  imageUrl     String?
+  lowPrice     Float?       
+  midPrice     Float?       
+  highPrice    Float?      
+  marketPrice  Float?       
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  collections  Collection[] 
+}
+
+model Collection {
+  userId      Int
+  cardId      String
+  quantity    Int         @default(1) 
+  acquiredAt  DateTime    @default(now())
+  user        User        @relation(fields: [userId], references: [id])
+  card        Card        @relation(fields: [cardId], references: [id])
+  @@id([userId, cardId])  // Composite primary key
 }
