@@ -1,26 +1,67 @@
-/* Base styling for the profile container */
+/* General styles for the profile container */
 .profile-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  max-width: 600px;
+  margin: 20px auto;
   padding: 20px;
-  background-color: #f8f9fa; /* Light background color for the profile area */
-  border-radius: 8px; /* Slightly rounded corners for a soft look */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-  width: 80%;
-  max-width: 400px; /* Maximum width of the profile area */
-  margin: 20px auto; /* Centering the profile container */
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Styling for paragraphs within the profile, which include email, Auth0 ID, etc. */
+/* Styling for each individual detail block */
+.profile-container div {
+  margin-bottom: 10px;
+}
+
+/* Labels and values for better readability */
 .profile-container p {
-  font-size: 16px; /* Readable text size */
-  color: #343a40; /* Dark gray text for better readability */
-  margin: 10px 0; /* Spacing between paragraph items */
-  padding: 5px 10px; /* Padding for touch friendliness */
-  border-radius: 4px; /* Rounded corners within the context */
-  background-color: #ffffff; /* White background for the text area */
-  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.06); /* Slight shadow for text entries */
-  width: 100%; /* Full width within the container */
-  box-sizing: border-box; /* Ensures padding does not affect width */
+  font-size: 16px;
+  color: #333;
+  margin: 5px 0;
+}
+
+/* Style modifications for the input field */
+input[type="text"] {
+  width: calc(100% - 22px); /* Full-width minus padding and border */
+  padding: 10px;
+  margin-top: 8px;
+  box-sizing: border-box; /* Include padding and border in width */
+  border: 2px solid #0056b3; /* Blue border for visual emphasis */
+  border-radius: 4px;
+}
+
+/* Button styling for a more engaging appearance */
+button {
+  background-color: #0056b3; /* Blue background */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #004494; /* Darker blue on hover for visual feedback */
+}
+
+/* Ensure the form elements align nicely */
+form {
+  display: block;
+  width: 100%;
+}
+
+/* Responsive design tweaks */
+@media (max-width: 768px) {
+  .profile-container {
+    margin: 10px;
+    padding: 10px;
+  }
+
+  input[type="text"],
+  button {
+    width: 100%; /* Full-width on smaller screens */
+  }
 }
