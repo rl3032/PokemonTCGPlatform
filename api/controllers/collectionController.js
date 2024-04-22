@@ -40,22 +40,6 @@ export async function addUserCard(req, res) {
   }
 }
 
-// Function to update card quantity in a user's collection
-export async function updateUserCard(req, res) {
-  const { userId } = req.params;
-  const { cardId, quantity } = req.body;
-  try {
-    const result = await prisma.collection.updateMany({
-      where: { userId: parseInt(userId), cardId },
-      data: { quantity },
-    });
-    res.json(result);
-  } catch (error) {
-    console.error("Error updating collection:", error);
-    res.status(500).send("Could not update collection");
-  }
-}
-
 // Function to remove a card from a user's collection
 export async function removeUserCard(req, res) {
   const { userId } = req.params;

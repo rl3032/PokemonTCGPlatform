@@ -40,18 +40,18 @@ export const verifyUser = async (req, res) => {
 
 export const getUserId = async (req, res) => {
   try {
-    const email = req.auth.payload[`${process.env.AUTH0_AUDIENCE}/email`];
-
-    console.log("Email:", email);
+    const auth0Id = req.params.id;
 
     // Attempt to find the user in the database
     const user = await prisma.user.findUnique({
-      where: { email },
+      where: { auth0Id },
     });
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
+
+    console.log("User ID:", user.id);
 
     // If user is found, return the user ID
     res.json({ userId: user.id });

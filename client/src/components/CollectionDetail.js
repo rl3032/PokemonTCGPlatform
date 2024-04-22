@@ -1,43 +1,56 @@
-import React from "react";
-import { useAuth0 } from "@auth0/auth0-react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const CollectionDetail = ({ card, onCardUpdate }) => {
-  const apiUrl = process.env.REACT_APP_API_URL;
-  // Use auth0 to get the user's auth0Id
-  const { user } = useAuth0();
-  const userId = user.sub;
+  const { user, getAccessTokenSilently } = useAuth0();
+  const [userId, setUserId] = useState(null);
+
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const accessToken = await getAccessTokenSilently();
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_URL}/user/${user.sub}`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        setUserId(response.data.userId); // Ensure this is set correctly based on your API response structure
+      } catch (error) {
+        console.error("Failed to fetch user ID:", error);
+        alert("Failed to fetch user information.");
+      }
+    };
+
+    if (user?.sub) {
+      fetchUserId();
+    }
+  }, [user?.sub, getAccessTokenSilently]);
 
   const handleAddToCollection = async () => {
     try {
-      const { data } = await axios.post(`${apiUrl}/user-cards/${userId}/add`, {
-        cardId: card.id,
-        quantity: 1, // Default quantity when adding new card
-      });
+      const accessToken = await getAccessTokenSilently();
+      const { data } = await axios.post(
+        `${process.env.REACT_APP_API_URL}/user-cards/${userId}/add`,
+        {
+          cardId: card.id,
+          quantity: 1,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
       console.log("Card added to collection:", data);
       alert(`Card ${card.name} added to collection successfully!`);
       onCardUpdate();
     } catch (error) {
       console.error("Error adding card to collection:", error);
       alert("Failed to add card to collection!");
-    }
-  };
-
-  const handleUpdateQuantity = async (newQuantity) => {
-    try {
-      const { data } = await axios.put(
-        `${apiUrl}/user-cards/${userId}/update`,
-        {
-          cardId: card.id,
-          quantity: newQuantity,
-        }
-      );
-      console.log("Card quantity updated:", data);
-      alert(`Card ${card.name} quantity updated successfully!`);
-      onCardUpdate();
-    } catch (error) {
-      console.error("Error updating card quantity:", error);
-      alert("Failed to update card quantity!");
     }
   };
 
@@ -48,9 +61,16 @@ const CollectionDetail = ({ card, onCardUpdate }) => {
       )
     ) {
       try {
-        await axios.delete(`${apiUrl}/user-cards/${userId}/remove`, {
-          data: { cardId: card.id },
-        });
+        const accessToken = await getAccessTokenSilently();
+        await axios.delete(
+          `${process.env.REACT_APP_API_URL}/user-cards/${userId}/remove`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+            data: { cardId: card.id },
+          }
+        );
         console.log("Card removed from collection:", card.id);
         alert("Card removed from collection successfully!");
         onCardUpdate();
@@ -69,11 +89,6 @@ const CollectionDetail = ({ card, onCardUpdate }) => {
       <p>Market Price: ${card.marketPrice}</p>
       <div className="buttons">
         <button onClick={handleAddToCollection}>Add to Collection</button>
-        <button
-          onClick={() => handleUpdateQuantity(prompt("Enter new quantity:", 1))}
-        >
-          Update Card Quantities
-        </button>
         <button onClick={handleRemoveFromCollection}>
           Remove from Collection
         </button>
