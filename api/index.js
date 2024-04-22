@@ -30,163 +30,58 @@ app.get("/ping", (req, res) => {
 });
 
 // add your endpoints below this line
-// Fetch multiple cards by a range of IDs
-// Fetch multiple cards by a range of IDs and store them in the database
+// Enhanced endpoint to handle card data more efficiently
 app.get("/cards-range", async (req, res) => {
   const ids = Array.from({ length: 50 }, (_, i) => `base1-${i + 1}`);
   try {
-    // First, try to fetch all the requested cards from the database
-    let cards = await prisma.card.findMany({
+    const cards = await prisma.card.findMany({
       where: { id: { in: ids } },
+      include: {
+        collections: true, // Include collections to fetch ownership details
+      },
     });
 
-    // Determine which card IDs are missing in the database
-    const fetchedIds = cards.map((card) => card.id);
-    const missingIds = ids.filter((id) => !fetchedIds.includes(id));
+    const missingIds = ids.filter(
+      (id) => !cards.some((card) => card.id === id)
+    );
+    const fetchedCards = await Promise.all(
+      missingIds.map(async (id) => {
+        const response = await axios.get(
+          `https://api.pokemontcg.io/v2/cards/${id}`,
+          {
+            headers: { "X-Api-Key": process.env.POKEMON_TCG_API_KEY },
+          }
+        );
+        return response.data.data;
+      })
+    );
 
-    // Only fetch missing cards from the external API
-    for (let id of missingIds) {
-      const url = `https://api.pokemontcg.io/v2/cards/${id}`;
-      const response = await axios.get(url, {
-        headers: { "X-Api-Key": process.env.POKEMON_TCG_API_KEY },
-      });
-      const cardData = response.data.data;
-
-      if (cardData) {
-        const priceDefaults = {
-          low: 0,
-          mid: 0,
-          high: 0,
-          market: 0,
-        };
-        const prices = cardData.tcgplayer?.prices?.holofoil || priceDefaults;
-
-        const newCard = await prisma.card.create({
+    const newCards = await prisma.$transaction(
+      fetchedCards.map((cardData) =>
+        prisma.card.create({
           data: {
             id: cardData.id,
             name: cardData.name,
             hp: cardData.hp || "N/A",
             types: cardData.types.join(", "),
             imageUrl: cardData.images.small,
-            lowPrice: prices.low,
-            midPrice: prices.mid,
-            highPrice: prices.high,
-            marketPrice: prices.market,
+            lowPrice: cardData.tcgplayer?.prices?.holofoil?.low || 0,
+            midPrice: cardData.tcgplayer?.prices?.holofoil?.mid || 0,
+            highPrice: cardData.tcgplayer?.prices?.holofoil?.high || 0,
+            marketPrice: cardData.tcgplayer?.prices?.holofoil?.market || 0,
           },
-        });
-        cards.push(newCard); // Add the newly fetched card to the list of cards
-      }
-    }
+        })
+      )
+    );
 
-    res.json(cards); // Return all cards, both cached and newly fetched
+    res.json([...cards, ...newCards]);
   } catch (error) {
     console.error("Error fetching cards:", error);
     res.status(500).send("Error fetching cards");
   }
 });
 
-// Fetch all cards (potentially with filters later on)
-app.get("/cards", async (req, res) => {
-  try {
-    const cards = await prisma.card.findMany();
-    res.json(cards);
-  } catch (error) {
-    res.status(500).send("Failed to fetch cards");
-  }
-});
-
-// Fetch cards for a specific user
-app.get("/user-cards/:userId", async (req, res) => {
-  try {
-    const cards = await prisma.card.findMany({
-      where: { userId: parseInt(req.params.userId) },
-    });
-    res.json(cards);
-  } catch (error) {
-    res.status(500).send("Failed to fetch user cards");
-  }
-});
-
-// Create a new card
-app.post("/cards", async (req, res) => {
-  const {
-    name,
-    hp,
-    types,
-    imageUrl,
-    lowPrice,
-    midPrice,
-    highPrice,
-    marketPrice,
-    userId,
-  } = req.body;
-  try {
-    const newCard = await prisma.card.create({
-      data: {
-        name,
-        hp,
-        types,
-        imageUrl,
-        lowPrice,
-        midPrice,
-        highPrice,
-        marketPrice,
-        userId,
-      },
-    });
-    res.json(newCard);
-  } catch (error) {
-    res.status(500).send("Failed to create card");
-  }
-});
-
-// Update an existing card
-app.put("/cards/:id", async (req, res) => {
-  const {
-    name,
-    hp,
-    types,
-    imageUrl,
-    lowPrice,
-    midPrice,
-    highPrice,
-    marketPrice,
-  } = req.body;
-  try {
-    const card = await prisma.card.update({
-      where: { id: req.params.id },
-      data: {
-        name,
-        hp,
-        types,
-        imageUrl,
-        lowPrice,
-        midPrice,
-        highPrice,
-        marketPrice,
-      },
-    });
-    res.json(card);
-  } catch (error) {
-    res.status(500).send("Failed to update card");
-  }
-});
-
-// Delete a card
-app.delete("/cards/:id", async (req, res) => {
-  try {
-    await prisma.card.delete({
-      where: { id: req.params.id },
-    });
-    res.send("Card deleted");
-  } catch (error) {
-    res.status(500).send("Failed to delete card");
-  }
-});
-
-// this endpoint is used by the client to verify the user status and to make sure the user is registered in our database once they signup with Auth0
-// if not registered in our database we will create it.
-// if the user is already registered we will return the user information
+// Endpoint to verify or create a new user
 app.post("/verify-user", requireAuth, async (req, res) => {
   const auth0Id = req.auth.payload.sub;
   const email = req.auth.payload[`${process.env.AUTH0_AUDIENCE}/email`];
@@ -210,6 +105,145 @@ app.post("/verify-user", requireAuth, async (req, res) => {
     });
 
     res.json(newUser);
+  }
+});
+
+// Endpoint to fetch user data by auth0Id
+app.get("/verify-user/:auth0Id", async (req, res) => {
+  const { auth0Id } = req.params;
+  try {
+    const user = await prisma.user.findUnique({
+      where: { auth0Id },
+    });
+    if (user) {
+      res.json(user);
+    } else {
+      res.status(404).send("User not found");
+    }
+  } catch (error) {
+    console.error("Failed to retrieve user:", error);
+    res.status(500).send("Error fetching user");
+  }
+});
+
+// Endpoint to update user data
+app.put("/verify-user/:auth0Id", requireAuth, async (req, res) => {
+  const { auth0Id } = req.params;
+  const email = req.auth.payload[`${process.env.AUTH0_AUDIENCE}/email`];
+  const name = req.auth.payload[`${process.env.AUTH0_AUDIENCE}/name`];
+
+  try {
+    const updatedUser = await prisma.user.update({
+      where: { auth0Id },
+      data: {
+        name,
+        email,
+      },
+    });
+    res.json(updatedUser);
+  } catch (error) {
+    console.error("Failed to update user:", error);
+    if (error.code === "P2025") {
+      res.status(404).send("User not found");
+    } else {
+      res.status(500).send("Error updating user");
+    }
+  }
+});
+
+// Endpoint to delete a user by auth0Id
+app.delete("/verify-user/:auth0Id", requireAuth, async (req, res) => {
+  const { auth0Id } = req.params;
+  try {
+    await prisma.user.delete({
+      where: { auth0Id },
+    });
+    res.send("User deleted successfully");
+  } catch (error) {
+    console.error("Failed to delete user:", error);
+    if (error.code === "P2025") {
+      res.status(404).send("User not found");
+    } else {
+      res.status(500).send("Error deleting user");
+    }
+  }
+});
+
+// Endpoint to fetch all cards, potentially with filters for advanced queries
+app.get("/cards", async (req, res) => {
+  try {
+    const cards = await prisma.card.findMany();
+    res.json(cards);
+  } catch (error) {
+    res.status(500).send("Failed to fetch cards");
+  }
+});
+
+// Endpoint to fetch cards for a specific user including quantities
+app.get("/user-cards/:userId", async (req, res) => {
+  try {
+    const collections = await prisma.collection.findMany({
+      where: {
+        userId: parseInt(req.params.userId),
+      },
+      include: {
+        card: true,
+      },
+    });
+    const cardsWithQuantities = collections.map((c) => ({
+      ...c.card,
+      quantity: c.quantity,
+    }));
+    res.json(cardsWithQuantities);
+  } catch (error) {
+    console.error("Error fetching user's collection:", error);
+    res.status(500).send("Failed to fetch user's collection");
+  }
+});
+
+// Endpoint to add a card to a user's collection
+app.post("/user-cards/:userId/add", requireAuth, async (req, res) => {
+  const { userId } = req.params;
+  const { cardId, quantity = 1 } = req.body; // Default quantity to 1 if not provided
+  try {
+    const entry = await prisma.collection.create({
+      data: { userId: parseInt(userId), cardId, quantity },
+    });
+    res.json(entry);
+  } catch (error) {
+    console.error("Error adding card to collection:", error);
+    res.status(500).send("Could not add card to collection");
+  }
+});
+
+// Endpoint to update card quantity in a collection
+app.put("/user-cards/:userId/update", requireAuth, async (req, res) => {
+  const { userId } = req.params;
+  const { cardId, quantity } = req.body;
+  try {
+    const result = await prisma.collection.updateMany({
+      where: { userId: parseInt(userId), cardId },
+      data: { quantity },
+    });
+    res.json(result);
+  } catch (error) {
+    console.error("Error updating collection:", error);
+    res.status(500).send("Could not update collection");
+  }
+});
+
+// Endpoint to remove a card from a collection
+app.delete("/user-cards/:userId/remove", requireAuth, async (req, res) => {
+  const { userId } = req.params;
+  const { cardId } = req.body;
+  try {
+    await prisma.collection.deleteMany({
+      where: { userId: parseInt(userId), cardId },
+    });
+    res.send("Card removed from collection");
+  } catch (error) {
+    console.error("Error removing card:", error);
+    res.status(500).send("Could not remove card");
   }
 });
 
