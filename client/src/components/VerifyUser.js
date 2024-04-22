@@ -1,33 +1,50 @@
-import { useEffect } from "react";
-import { useAuthToken } from "../contexts/AuthTokenContext";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuthToken } from "../contexts/AuthTokenContext";
+import { useAuth0 } from "@auth0/auth0-react";
 
-export default function VerifyUser() {
+const VerifyUser = () => {
+  const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const { setAccessToken } = useAuthToken();
   const navigate = useNavigate();
-  const { accessToken } = useAuthToken();
 
   useEffect(() => {
-    async function verifyUser() {
-      // make a call to our API to verify the user in our database, if it doesn't exist we'll insert it into our database
-      // finally we'll redirect the user to the /app route
-      const data = await fetch(`${process.env.REACT_APP_API_URL}/verify-user`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      const user = await data.json();
+    const verifyAndCreateUser = async () => {
+      if (!isAuthenticated) return;
 
-      if (user.auth0Id) {
+      try {
+        const token = await getAccessTokenSilently();
+        setAccessToken(token);
+
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/verify-user`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              auth0Id: user.sub,
+              email: user.email,
+              name: user.name,
+            }),
+          }
+        );
+
+        const userData = await response.json();
+        if (!response.ok) throw new Error(userData.message);
         navigate("/app");
+      } catch (error) {
+        console.error("Verification failed:", error);
+        navigate("/login");
       }
-    }
+    };
 
-    if (accessToken) {
-      verifyUser();
-    }
-  }, [accessToken, navigate]);
+    verifyAndCreateUser();
+  }, [user, isAuthenticated, getAccessTokenSilently, setAccessToken, navigate]);
 
-  return <div className="loading">Loading...</div>;
-}
+  return <div>Loading...</div>;
+};
+
+export default VerifyUser;

@@ -12,30 +12,42 @@ const Collection = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:8000/cards")
-      .then((response) => {
-        setCards(response.data);
+    const fetchCards = async () => {
+      try {
+        const { data } = await axios.get(
+          `${process.env.REACT_APP_API_URL}/cards`
+        );
+        setCards(data);
         setIsLoading(false);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("Error fetching cards:", error);
         setIsLoading(false);
-      });
+      }
+    };
 
-    // Load user's collection
-    axios
-      .get("http://localhost:8000/user-cards")
-      .then((response) => {
-        setUserCards(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching user cards:", error);
-      });
+    fetchCards();
+    fetchUserCards();
   }, []);
 
-  const handleCardSelect = (card) => {
+  const fetchUserCards = async () => {
+    try {
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_API_URL}/user-cards/:userId`
+      );
+      setUserCards(data);
+    } catch (error) {
+      console.error("Error fetching user cards:", error);
+    }
+  };
+
+  const handleCardSelect = async (card) => {
     setSelectedCard(card);
+    try {
+      const { data } = await axios.get(`http://localhost:8000/user-cards/1`);
+      setUserCards(data);
+    } catch (error) {
+      console.error("Error fetching user cards:", error);
+    }
   };
 
   if (isLoading) {
@@ -57,11 +69,14 @@ const Collection = () => {
       </div>
       <div className="right-panel">
         {selectedCard ? (
-          <CollectionDetail card={selectedCard} />
+          <CollectionDetail
+            card={selectedCard}
+            onCardUpdate={handleCardSelect}
+          />
         ) : (
           <div>Select a card to view details</div>
         )}
-        <UserCollection cards={userCards} />
+        <UserCollection cards={userCards} onSelectCard={handleCardSelect} />
       </div>
     </div>
   );

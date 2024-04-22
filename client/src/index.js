@@ -6,15 +6,16 @@ import { AuthTokenProvider } from "./contexts/AuthTokenContext";
 import { CardsProvider } from "./contexts/CardContext";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import Home from "./components/Home";
-import Pokedex from "./components/Pokedex";
 import CardDetail from "./components/CardDetail";
 import VerifyUser from "./components/VerifyUser";
-import Login from "./components/Login";
-import AppLayout from "./components/AppLayout";
-import Profile from "./components/Profile";
 import Collection from "./components/Collection";
-import AuthDebugger from "./components/AuthDebugger";
+
+import Home from "./pages/Home";
+import Pokedex from "./pages/Pokedex";
+import Login from "./pages/Login";
+import AppLayout from "./pages/AppLayout";
+import Profile from "./pages/Profile";
+import AuthDebugger from "./pages/AuthDebugger";
 
 const container = document.getElementById("root");
 

@@ -1,47 +1,62 @@
 import React from "react";
+import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 
-const CollectionDetail = ({ card }) => {
-  const apiUrl = "http://localhost:8000";
+const CollectionDetail = ({ card, onCardUpdate }) => {
+  const apiUrl = process.env.REACT_APP_API_URL;
+  // Use auth0 to get the user's auth0Id
+  const { user } = useAuth0();
+  const userId = user.sub;
 
-  const handleCreate = async () => {
+  const handleAddToCollection = async () => {
     try {
-      const { data } = await axios.post(`${apiUrl}/cards`, card);
-      console.log("Card created:", data);
-      alert(`Card ${data.name} added successfully!`);
+      const { data } = await axios.post(`${apiUrl}/user-cards/${userId}/add`, {
+        cardId: card.id,
+        quantity: 1, // Default quantity when adding new card
+      });
+      console.log("Card added to collection:", data);
+      alert(`Card ${card.name} added to collection successfully!`);
+      onCardUpdate();
     } catch (error) {
-      console.error("Error creating card:", error);
-      alert("Failed to add card!");
+      console.error("Error adding card to collection:", error);
+      alert("Failed to add card to collection!");
     }
   };
 
-  const handleUpdate = async () => {
-    const newPrice = prompt("Enter new market price:", card.marketPrice);
-    if (newPrice) {
+  const handleUpdateQuantity = async (newQuantity) => {
+    try {
+      const { data } = await axios.put(
+        `${apiUrl}/user-cards/${userId}/update`,
+        {
+          cardId: card.id,
+          quantity: newQuantity,
+        }
+      );
+      console.log("Card quantity updated:", data);
+      alert(`Card ${card.name} quantity updated successfully!`);
+      onCardUpdate();
+    } catch (error) {
+      console.error("Error updating card quantity:", error);
+      alert("Failed to update card quantity!");
+    }
+  };
+
+  const handleRemoveFromCollection = async () => {
+    if (
+      window.confirm(
+        `Are you sure you want to remove ${card.name} from your collection?`
+      )
+    ) {
       try {
-        const { data } = await axios.put(`${apiUrl}/cards/${card.id}`, {
-          ...card,
-          marketPrice: newPrice,
+        await axios.delete(`${apiUrl}/user-cards/${userId}/remove`, {
+          data: { cardId: card.id },
         });
-        console.log("Card updated:", data);
-        alert(`Card ${data.name} updated successfully!`);
+        console.log("Card removed from collection:", card.id);
+        alert("Card removed from collection successfully!");
+        onCardUpdate();
       } catch (error) {
-        console.error("Error updating card:", error);
-        alert("Failed to update card!");
-      }
-    }
-  };
-
-  const handleDelete = async () => {
-    // Implement delete logic
-    if (window.confirm(`Are you sure you want to delete ${card.name}?`)) {
-      try {
-        await axios.delete(`${apiUrl}/cards/${card.id}`);
-        console.log("Card deleted:", card.id);
-        alert("Card deleted successfully!");
-      } catch (error) {
-        console.error("Error deleting card:", error);
-        alert("Failed to delete card!");
+        console.error("Error removing card from collection:", error);
+        alert("Failed to remove card from collection!");
       }
     }
   };
@@ -53,9 +68,15 @@ const CollectionDetail = ({ card }) => {
       <p>HP: {card.hp}</p>
       <p>Market Price: ${card.marketPrice}</p>
       <div className="buttons">
-        <button onClick={handleCreate}>Add Card</button>
-        <button onClick={handleUpdate}>Update Card</button>
-        <button onClick={handleDelete}>Delete Card</button>
+        <button onClick={handleAddToCollection}>Add to Collection</button>
+        <button
+          onClick={() => handleUpdateQuantity(prompt("Enter new quantity:", 1))}
+        >
+          Update Card Quantities
+        </button>
+        <button onClick={handleRemoveFromCollection}>
+          Remove from Collection
+        </button>
       </div>
     </div>
   );
