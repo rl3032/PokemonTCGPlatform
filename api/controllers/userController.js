@@ -3,10 +3,19 @@ const prisma = new PrismaClient();
 
 export const verifyUser = async (req, res) => {
   try {
+    console.log("Auth Payload:", req.auth.payload);
+
     // Extract Auth0 ID, email, and name from the request's auth payload
-    const auth0Id = req.params.auth0Id;
+    const auth0Id = req.auth.payload.sub;
     const email = req.auth.payload[`${process.env.AUTH0_AUDIENCE}/email`];
     const name = req.auth.payload[`${process.env.AUTH0_AUDIENCE}/name`];
+
+    console.log(req.auth.payload); // Add this line to debug payload content
+    if (!email || !name) {
+      return res
+        .status(400)
+        .json({ error: "Missing email or name in payload" });
+    }
 
     // Attempt to find the user in the database
     const user = await prisma.user.findUnique({
@@ -27,6 +36,7 @@ export const verifyUser = async (req, res) => {
       res.json(newUser);
     }
   } catch (error) {
+    console.error("Error in verifyUser function:", error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -49,8 +59,8 @@ export const getUser = async (req, res) => {
 
 export const updateUser = async (req, res) => {
   try {
-    const auth0Id = req.params.auth0Id;
-    const { email, name, newUsername } = req.body;
+    const auth0Id = req.params.id;
+    const { email, name } = req.body;
 
     // Update the user details in the database
     const user = await prisma.user.update({
@@ -58,19 +68,12 @@ export const updateUser = async (req, res) => {
       data: {
         email,
         name,
-        username: newUsername,
       },
     });
 
     // Return the updated user information
     res.json(user);
   } catch (error) {
-    // Handle any errors that occur during the update process
-    if (error.code === "P2025") {
-      // Prisma's error code for record not found
-      res.status(404).json({ error: "User not found" });
-    } else {
-      res.status(500).json({ error: error.message });
-    }
+    res.status(500).json({ error: error.message });
   }
 };
