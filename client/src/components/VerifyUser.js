@@ -17,7 +17,7 @@ const VerifyUser = () => {
         setAccessToken(token);
 
         const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/verify-user`,
+          `${process.env.REACT_APP_API_URL}/user/verify`,
           {
             method: "POST",
             headers: {

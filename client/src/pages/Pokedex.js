@@ -16,7 +16,7 @@ const Pokedex = () => {
   useEffect(() => {
     setIsLoading(true);
     axios
-      .get(`${process.env.REACT_APP_API_URL}/cards-range`)
+      .get(`${process.env.REACT_APP_API_URL}/cards`)
       .then((response) => {
         setCards(response.data.filter((card) => card !== null && card.name)); // Ensure that card is not null and has a name
         setIsLoading(false);

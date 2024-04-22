@@ -11,7 +11,7 @@ export const CardsProvider = ({ children }) => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/cards-range")
+      .get("http://localhost:8000/cards")
       .then((response) => {
         setCards(response.data);
         setIsLoading(false);

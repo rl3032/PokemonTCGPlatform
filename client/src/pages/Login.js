@@ -6,7 +6,6 @@ import "../styles/Login.css";
 const Login = () => {
   const { isAuthenticated, loginWithRedirect } = useAuth0();
   const navigate = useNavigate();
-  const signUp = () => loginWithRedirect({ screen_hint: "signup" });
 
   if (isAuthenticated) {
     navigate("/app");
@@ -18,18 +17,13 @@ const Login = () => {
       <div>
         {!isAuthenticated ? (
           <button className="button" onClick={loginWithRedirect}>
-            Log In
+            Log In / Sign Up
           </button>
         ) : (
           <button className="button" onClick={() => navigate("/app")}>
             Enter App
           </button>
         )}
-      </div>
-      <div>
-        <button className="button-signup" onClick={signUp}>
-          Create Account
-        </button>
       </div>
     </div>
   );
