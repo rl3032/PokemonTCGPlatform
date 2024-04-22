@@ -1,34 +1,22 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthToken } from "../contexts/AuthTokenContext";
-import { useAuth0 } from "@auth0/auth0-react";
 
 const VerifyUser = () => {
-  const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
-  const { setAccessToken } = useAuthToken();
+  const { accessToken } = useAuthToken();
   const navigate = useNavigate();
 
   useEffect(() => {
     const verifyAndCreateUser = async () => {
-      if (!isAuthenticated) return;
-
       try {
-        const token = await getAccessTokenSilently();
-        setAccessToken(token);
-
         const response = await fetch(
           `${process.env.REACT_APP_API_URL}/user/verify`,
           {
             method: "POST",
             headers: {
-              Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
             },
-            body: JSON.stringify({
-              auth0Id: user.sub,
-              email: user.email,
-              name: user.name,
-            }),
           }
         );
 
@@ -40,9 +28,10 @@ const VerifyUser = () => {
         navigate("/login");
       }
     };
-
-    verifyAndCreateUser();
-  }, [user, isAuthenticated, getAccessTokenSilently, setAccessToken, navigate]);
+    if (accessToken) {
+      verifyAndCreateUser();
+    }
+  }, [accessToken, navigate]);
 
   return <div>Loading...</div>;
 };
