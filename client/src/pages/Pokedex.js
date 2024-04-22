@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Card from "./Card";
+import Card from "../components/Card";
 import { useNavigate } from "react-router-dom";
 import "../styles/Pokedex.css";
 
@@ -16,7 +16,7 @@ const Pokedex = () => {
   useEffect(() => {
     setIsLoading(true);
     axios
-      .get("http://localhost:8000/cards-range")
+      .get(`${process.env.REACT_APP_API_URL}/cards-range`)
       .then((response) => {
         setCards(response.data.filter((card) => card !== null && card.name)); // Ensure that card is not null and has a name
         setIsLoading(false);

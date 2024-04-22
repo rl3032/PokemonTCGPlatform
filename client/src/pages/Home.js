@@ -1,6 +1,6 @@
 import React from "react";
-import FeatureCards from "./FeatureCards";
-import FlashSale from "./FlashSale";
+import FeatureCards from "../components/FeatureCards";
+import FlashSale from "../components/FlashSale";
 import "../styles/Home.css";
 
 function Home() {
