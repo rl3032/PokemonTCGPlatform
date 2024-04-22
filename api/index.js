@@ -14,6 +14,10 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(routes);
 
+app.get("/ping", (req, res) => {
+  res.send("pong");
+});
+
 app.listen(process.env.PORT, () => {
   console.log(`Server running on http://localhost:${process.env.PORT} 🎉 🚀`);
 });
