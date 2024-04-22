@@ -3,14 +3,11 @@ const prisma = new PrismaClient();
 
 export const verifyUser = async (req, res) => {
   try {
-    console.log("Auth Payload:", req.auth.payload);
-
     // Extract Auth0 ID, email, and name from the request's auth payload
     const auth0Id = req.auth.payload.sub;
     const email = req.auth.payload[`${process.env.AUTH0_AUDIENCE}/email`];
     const name = req.auth.payload[`${process.env.AUTH0_AUDIENCE}/name`];
 
-    console.log(req.auth.payload); // Add this line to debug payload content
     if (!email || !name) {
       return res
         .status(400)
@@ -41,17 +38,23 @@ export const verifyUser = async (req, res) => {
   }
 };
 
-export const getUser = async (req, res) => {
+export const getUserId = async (req, res) => {
   try {
-    const username = req.params.username;
+    const email = req.auth.payload[`${process.env.AUTH0_AUDIENCE}/email`];
+
+    console.log("Email:", email);
+
+    // Attempt to find the user in the database
     const user = await prisma.user.findUnique({
-      where: { username },
+      where: { email },
     });
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
-    res.status(200).json(user);
+
+    // If user is found, return the user ID
+    res.json({ userId: user.id });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

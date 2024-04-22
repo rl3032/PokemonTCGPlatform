@@ -2,7 +2,7 @@ import express from "express";
 import { requireAuth } from "../middleware/validateToken.js";
 import {
   verifyUser,
-  getUser,
+  getUserId,
   updateUser,
 } from "../controllers/userController.js";
 import { getCardsInRange } from "../controllers/cardController.js";
@@ -15,8 +15,8 @@ import {
 
 const router = express.Router();
 
-router.get("/user/username", getUser);
 router.post("/user/verify", requireAuth, verifyUser);
+router.get("/user/:id", requireAuth, getUserId);
 router.put("/user/:id", requireAuth, updateUser);
 router.get("/cards", getCardsInRange);
 router.get("/user-cards/:userId", getUserCards);
