@@ -8,7 +8,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import CardDetail from "./components/CardDetail";
 import VerifyUser from "./components/VerifyUser";
-import Collection from "./components/Collection";
+import Collection from "./pages/Collection";
 
 import Home from "./pages/Home";
 import Pokedex from "./pages/Pokedex";
@@ -46,7 +46,7 @@ root.render(
       domain={auth0Domain}
       clientId={auth0ClientId}
       authorizationParams={{
-        redirect_uri: `${window.location.origin}/verify-user`,
+        redirect_uri: `${window.location.origin}/verify`,
         audience: auth0Audience,
         scope: requestedScopes.join(" "),
       }}
@@ -68,7 +68,7 @@ root.render(
                 }
               />
 
-              <Route path="/verify-user" element={<VerifyUser />} />
+              <Route path="/verify" element={<VerifyUser />} />
               <Route path="/login" element={<Login />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/collection" element={<Collection />} />

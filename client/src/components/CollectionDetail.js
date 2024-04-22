@@ -1,53 +1,26 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
 
-const CollectionDetail = ({ card, onCardUpdate }) => {
-  const { user, getAccessTokenSilently } = useAuth0();
-  const [userId, setUserId] = useState(null);
-
-  useEffect(() => {
-    const fetchUserId = async () => {
-      try {
-        const accessToken = await getAccessTokenSilently();
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/user/${user.sub}`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        setUserId(response.data.userId); // Ensure this is set correctly based on your API response structure
-      } catch (error) {
-        console.error("Failed to fetch user ID:", error);
-        alert("Failed to fetch user information.");
-      }
-    };
-
-    if (user?.sub) {
-      fetchUserId();
-    }
-  }, [user?.sub, getAccessTokenSilently]);
+const CollectionDetail = ({
+  card,
+  onCardUpdate,
+  userId,
+  onUpdateUserCards,
+}) => {
+  const { getAccessTokenSilently } = useAuth0();
 
   const handleAddToCollection = async () => {
     try {
       const accessToken = await getAccessTokenSilently();
-      const { data } = await axios.post(
+      await axios.post(
         `${process.env.REACT_APP_API_URL}/user-cards/${userId}/add`,
-        {
-          cardId: card.id,
-          quantity: 1,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
+        { cardId: card.id, quantity: 1 },
+        { headers: { Authorization: `Bearer ${accessToken}` } }
       );
-      console.log("Card added to collection:", data);
-      alert(`Card ${card.name} added to collection successfully!`);
+      onUpdateUserCards();
       onCardUpdate();
+      alert(`Card ${card.name} added to collection successfully!`);
     } catch (error) {
       console.error("Error adding card to collection:", error);
       alert("Failed to add card to collection!");
@@ -65,15 +38,13 @@ const CollectionDetail = ({ card, onCardUpdate }) => {
         await axios.delete(
           `${process.env.REACT_APP_API_URL}/user-cards/${userId}/remove`,
           {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
+            headers: { Authorization: `Bearer ${accessToken}` },
             data: { cardId: card.id },
           }
         );
-        console.log("Card removed from collection:", card.id);
-        alert("Card removed from collection successfully!");
+        onUpdateUserCards();
         onCardUpdate();
+        alert("Card removed from collection successfully!");
       } catch (error) {
         console.error("Error removing card from collection:", error);
         alert("Failed to remove card from collection!");
