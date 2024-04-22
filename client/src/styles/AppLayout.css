@@ -5,7 +5,7 @@
 }
 
 .app-header {
-  background-color: #333; /* Dark gray for a subtle header background */
+  background-color: #333;
   color: white;
   padding: 10px 20px;
   display: flex;
@@ -41,15 +41,15 @@
 
 .app-nav a:hover,
 .app-nav button:hover {
-  background-color: #777; /* Even lighter gray for hover effects */
+  background-color: #777;
 }
 
 .welcome-message {
-  font-size: 16px;
+  font-size: 1rem;
 }
 
 .app-content {
   flex: 1;
   padding: 20px;
-  background-color: #f0f0f0; /* Very light gray for the content background */
+  background-color: #f0f0f0;
 }

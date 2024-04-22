@@ -30,3 +30,10 @@
 .button:hover {
   background-color: #5a6268;
 }
+
+@media (max-width: 768px) {
+  .login {
+    margin-top: 20px;
+    padding: 10px;
+  }
+}

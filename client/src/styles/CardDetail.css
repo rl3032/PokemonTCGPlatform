@@ -1,26 +1,46 @@
 .card-detail-container {
   display: flex;
-  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+.card-image-container {
+  flex: 1 1 300px;
+  text-align: center;
+}
+.card-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.card-info-container {
+  flex: 2 1 600px;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background: white;
+}
+.card-name {
+  margin-top: 0;
+}
+.price-info h2 {
+  margin-top: 0;
+}
+.price-list {
+  list-style: none;
+  padding: 0;
+}
+.price-list li {
+  padding: 5px 0;
+  border-bottom: 1px solid #eee;
+}
+.loading-container,
+.error-container {
+  display: flex;
   justify-content: center;
   padding: 20px;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-.card-image-container {
-  flex-basis: 50%;
-  max-width: 300px;
-  margin: auto;
-}
-
-.card-image {
-  width: 100%;
-  height: auto;
-  max-height: 400px;
-}
-
-.card-info-container {
-  flex-basis: 50%;
-  max-width: 500px;
-  margin: auto;
+  text-align: center;
 }

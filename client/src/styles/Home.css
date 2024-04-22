@@ -1,15 +1,15 @@
-/* Home.css */
 .home-container {
+  max-width: 1200px;
+  margin: auto;
   padding: 20px;
-  text-align: center;
+  background-color: #f0f8ff;
 }
 
-.featured-cards,
-.flash-sale-container {
-  margin: 20px auto;
-  padding: 20px;
-  text-align: center;
-  width: 80%; /* Adjust width as necessary for your design */
+.home-intro {
+  padding: 15px;
+  margin-top: 20px;
+  background-color: #ddd;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .cards-container {
@@ -17,17 +17,16 @@
   justify-content: center;
   flex-wrap: wrap;
 }
-
 .card {
   border: 1px solid #ddd;
   border-radius: 4px;
   margin: 10px;
-  width: 150px;
+  width: 100%;
+  max-width: 150px;
   text-align: center;
 }
-
-.card img {
-  width: 100%;
-  height: auto;
-  margin-bottom: 8px;
+@media (max-width: 768px) {
+  .card {
+    width: 48%;
+  }
 }

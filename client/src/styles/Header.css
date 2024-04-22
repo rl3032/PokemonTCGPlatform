@@ -1,7 +1,7 @@
 header {
   display: flex;
   align-items: center;
-  justify-content: space-between; /* Aligns children to opposite ends */
+  justify-content: space-between;
   background-color: #f8f8f8;
   padding: 1rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -10,7 +10,7 @@ header {
 .header .logo {
   max-height: 80px;
   width: auto;
-  margin-right: auto; /* Ensures the logo stays to the left */
+  margin-right: auto;
 }
 
 .navigation-menu ul {
@@ -18,7 +18,7 @@ header {
   display: flex;
   padding: 0;
   margin: 0;
-  align-items: center; /* Center align menu items */
+  align-items: center;
 }
 
 .navigation-menu li {
@@ -33,12 +33,24 @@ header {
 }
 
 .login {
-  display: flex; /* Aligns the login link to the right */
+  display: flex;
   align-items: center;
-  padding-left: 1rem; /* Adds a bit of space between navigation and login link */
+  padding-left: 1rem;
 }
 
-/* If you want the navigation menu and login to be even further to the right */
 .navigation-menu {
   margin-left: auto;
+}
+
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+  }
+  .navigation-menu ul {
+    flex-direction: column;
+  }
+  .navigation-menu li,
+  .login {
+    padding: 0.5rem 0;
+  }
 }

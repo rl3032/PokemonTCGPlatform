@@ -7,37 +7,46 @@ const CardDetail = () => {
   const { id } = useParams();
   const { cards, isLoading } = useCards();
   const card = cards.find((card) => card.id === id);
-  console.log(card);
 
   if (isLoading) {
-    return <h1>Loading...</h1>;
+    return (
+      <div className="loading-container">
+        <h1>Loading...</h1>
+      </div>
+    );
   }
 
   if (!card) {
-    return <h1>Card not found</h1>;
+    return (
+      <div className="error-container">
+        <h1>Card not found</h1>
+      </div>
+    );
   }
 
   return (
     <div className="card-detail-container">
       <div className="card-image-container">
-        <img src={card.imageUrl} alt={card.name} className="card-image" />
+        <img src={card.imageUrl} alt="" className="card-image" />
       </div>
       <div className="card-info-container">
-        <h1>{card.name}</h1>
+        <h1 className="card-name">{card.name}</h1>
         <div className="price-info">
           <h2>Prices</h2>
-          <p>
-            <strong>Market:</strong> ${card.marketPrice}
-          </p>
-          <p>
-            <strong>Low:</strong> ${card.lowPrice}
-          </p>
-          <p>
-            <strong>Mid:</strong> ${card.midPrice}
-          </p>
-          <p>
-            <strong>High:</strong> ${card.highPrice}
-          </p>
+          <ul className="price-list">
+            <li>
+              <strong>Market:</strong> ${card.marketPrice}
+            </li>
+            <li>
+              <strong>Low:</strong> ${card.lowPrice}
+            </li>
+            <li>
+              <strong>Mid:</strong> ${card.midPrice}
+            </li>
+            <li>
+              <strong>High:</strong> ${card.highPrice}
+            </li>
+          </ul>
         </div>
       </div>
     </div>

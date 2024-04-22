@@ -41,3 +41,14 @@
 .buttons button:hover {
   background-color: #0056b3;
 }
+
+@media (max-width: 768px) {
+  .collection-layout {
+    flex-direction: column;
+  }
+  .card-list,
+  .right-panel {
+    flex-basis: 100%;
+    border-right: none;
+  }
+}
